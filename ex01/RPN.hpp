@@ -2,15 +2,8 @@
 #define RPN_H
 
 #pragma once
+#include <array>
 
-class RPN
-{
-public:
-    RPN();
-    ~RPN();
-
-private:
-
-};
+bool validate(std::array<char, 21> expression);
 
 #endif
