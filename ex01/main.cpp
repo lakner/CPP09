@@ -1,5 +1,5 @@
 #include "RPN.hpp"
-#include <stack>
+#include <deque>
 #include <iostream>
 
 // I have to re-write this whole thing using a stack
@@ -20,15 +20,15 @@ int main(int argc, char **argv)
 		std::cout << "Error" << std::endl;
 		return 1;
 	}
-	std::stack<double> rpnstack;
+	std::deque<double> rpnstack;
 	//for (int i = 0; s_expr[i]; i++)
 	double result = (s_expr[0] - '0');
 	for (std::string::iterator it = (s_expr.begin()) + 1; it != s_expr.end(); it++)
 	{
-		// std::cout << *it << std::endl;
+		std::cout << *it << std::endl;
 		if (isdigit(*it))
 		{
-			rpnstack.push(*it - '0');
+			rpnstack.push_back(*it - '0');
 		}
 		else
 		{
@@ -41,29 +41,31 @@ int main(int argc, char **argv)
 			}
 			switch (*it)
 			{
-				result = rpnstack.top();
-				rpnstack.pop();
+				result = rpnstack.back();
+				rpnstack.pop_back();
 				case '+':
-					result += rpnstack.top();
+					result += rpnstack.back();
 					break;
 				case '-':
-					result -= rpnstack.top();
+					//result = rpnstack.top() - result;
+					result -= rpnstack.back();
 					break;
 				case '*':
-					result *= rpnstack.top();
+					result *= rpnstack.back();
 					break;
 				case '/':
-					result /= rpnstack.top();
+					result = rpnstack.back() / result;
 					break;
 				default:
 					std::cout << "Error" << std::endl;
 					return 1;
 			}
-			rpnstack.pop();
-			rpnstack.push(result);
-			// std::cout << "Result: " << result << std::endl;
+			rpnstack.pop_back();
+			rpnstack.push_front(result);
+			std::cout << "Result: " << result << std::endl;
 		}
 	}
+	//result = rpnstack.();
 	std::cout << result << std::endl;
 	return 0;
 }
