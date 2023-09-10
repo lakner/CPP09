@@ -2,8 +2,6 @@
 #include <deque>
 #include <iostream>
 
-// I have to re-write this whole thing using a stack
-
 int main(int argc, char **argv)
 {
 	if (argc != 2)
@@ -20,12 +18,11 @@ int main(int argc, char **argv)
 		std::cout << "Error" << std::endl;
 		return 1;
 	}
+
 	std::deque<double> rpnstack;
-	//for (int i = 0; s_expr[i]; i++)
 	double result = (s_expr[0] - '0');
 	for (std::string::iterator it = (s_expr.begin()) + 1; it != s_expr.end(); it++)
 	{
-		std::cout << *it << std::endl;
 		if (isdigit(*it))
 		{
 			rpnstack.push_back(*it - '0');
@@ -33,10 +30,9 @@ int main(int argc, char **argv)
 		else
 		{
 			std::string operands = "+-*/";
-			// std::cout << *it << std::endl;
 			if (operands.find(*it) == std::string::npos)
 			{
-				std::cout << "Error: invalid character: " << *it << std::endl;
+				std::cout << "Error" << std::endl;
 				return 1;
 			}
 			switch (*it)
