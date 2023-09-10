@@ -1,7 +1,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include "BitcoinExchange.h"
+#include "BitcoinExchange.hpp"
 
 BitcoinExchange::BitcoinExchange()
 {
