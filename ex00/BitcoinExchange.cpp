@@ -47,10 +47,10 @@ const char* BitcoinExchange::BadDateException::what() const throw()
 	return("Invalid date.");
 }
 
-std::list< std::pair<std::string, float> > 
+std::map< std::string, float > 
 BitcoinExchange::readInputfile(std::string filename)
 {
-	std::list<std::pair <std::string, float> > contents;
+	std::map< std::string, float > contents;
 	std::ifstream infile(filename);
 	std::string line;
 
@@ -62,7 +62,7 @@ BitcoinExchange::readInputfile(std::string filename)
 
 	// read the rest
 	while (std::getline(infile, line))
-		contents.push_back(processLine(line, false));
+		contents.insert(processLine(line, false));
 
 	return(contents);
 }
@@ -127,7 +127,7 @@ void BitcoinExchange::readInputData(std::string fPrices)
 
 void BitcoinExchange::printResults(std::string filename)
 {
-	std::list<std::pair <std::string, float> > contents;
+	std::map< std::string, float > contents;
 	std::ifstream infile(filename);
 	std::string line;
 
@@ -149,7 +149,7 @@ void BitcoinExchange::printResults(std::string filename)
 			std::cout << "Error: " << ex.what() << std::endl;
 			continue;
 		}
-		for (std::list<std::pair<std::string, float> >::iterator it2 = _btcPrices.begin();
+		for (std::map< std::string, float >::iterator it2 = _btcPrices.begin();
 			it2 != _btcPrices.end(); it2++)
 		if (values.first == it2->first || 
 			(values.first > it2->first && it2 == _btcPrices.begin() ))
