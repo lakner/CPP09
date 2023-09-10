@@ -1,4 +1,4 @@
-NAME	= RPN
+NAME	= merge
 SRCS	= main.cpp PmergeMe.cpp
 HEADERS	= PmergeMe.hpp
 
