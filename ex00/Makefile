@@ -1,6 +1,6 @@
 NAME	= btc
 SRCS	= main.cpp BitcoinExchange.cpp
-HEADERS	= BitcoinExchange.h
+HEADERS	= BitcoinExchange.hpp
 
 ODIR	= obj
 OBJS	= $(addprefix $(ODIR)/, $(SRCS:.cpp=.o))

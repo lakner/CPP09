@@ -4,7 +4,7 @@
 #pragma once
 #include <string>
 #include <stdexcept>
-#include <list>
+#include <map>
 
 class BitcoinExchange
 {
@@ -34,8 +34,8 @@ public:
 	};
 	
 private:
-	std::list< std::pair<std::string, float> > _btcPrices;
-	std::list< std::pair<std::string, float> > _btcValues;
+	std::map< std::pair<std::string, float> > _btcPrices;
+//	std::list< std::pair<std::string, float> > _btcValues;
 	std::pair<std::string, float> processLine(std::string line, bool tooLarge);
 	bool dateIsValid(std::string sdate);
 	std::list< std::pair<std::string, float> > readInputfile(std::string filename);
