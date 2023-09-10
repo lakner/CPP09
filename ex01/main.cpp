@@ -47,14 +47,13 @@ int main(int argc, char **argv)
 					result += rpnstack.back();
 					break;
 				case '-':
-					//result = rpnstack.top() - result;
 					result -= rpnstack.back();
 					break;
 				case '*':
 					result *= rpnstack.back();
 					break;
 				case '/':
-					result = rpnstack.back() / result;
+					result /= rpnstack.back();
 					break;
 				default:
 					std::cout << "Error" << std::endl;
@@ -62,10 +61,8 @@ int main(int argc, char **argv)
 			}
 			rpnstack.pop_back();
 			rpnstack.push_front(result);
-			std::cout << "Result: " << result << std::endl;
 		}
 	}
-	//result = rpnstack.();
 	std::cout << result << std::endl;
 	return 0;
 }
