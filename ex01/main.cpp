@@ -14,27 +14,19 @@ int main(int argc, char **argv)
 
 	s_expr.erase(remove_if(s_expr.begin(), s_expr.end(), isspace), s_expr.end());
 	if (!isdigit(s_expr[0]))
-	{
-		std::cout << "Error" << std::endl;
-		return 1;
-	}
+		return(throwTheError());
 
 	std::deque<double> rpnstack;
 	double result = (s_expr[0] - '0');
 	for (std::string::iterator it = (s_expr.begin()) + 1; it != s_expr.end(); it++)
 	{
 		if (isdigit(*it))
-		{
 			rpnstack.push_back(*it - '0');
-		}
 		else
 		{
 			std::string operands = "+-*/";
 			if (operands.find(*it) == std::string::npos)
-			{
-				std::cout << "Error" << std::endl;
-				return 1;
-			}
+				return(throwTheError());
 			switch (*it)
 			{
 				result = rpnstack.back();
