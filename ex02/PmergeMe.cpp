@@ -55,7 +55,7 @@ void PmergeMe::printList()
 double PmergeMe::sortVec()
 {
 	clock_t start = clock();
-	sortVec2(this->_vec);	
+	this->_vec = sortVec2(this->_vec);	
 	clock_t end = clock();
 	return(static_cast<double> (end - start)/CLOCKS_PER_SEC * 1000000);
 }
@@ -63,7 +63,7 @@ double PmergeMe::sortVec()
 double PmergeMe::sortList()
 {
 	clock_t start = clock();
-	sortList2(this->_list);
+	this->_list = sortList2(this->_list);
 	clock_t end = clock();
 	return(static_cast<double> (end - start)/CLOCKS_PER_SEC * 1000000);
 }
@@ -72,53 +72,68 @@ std::vector<unsigned int> PmergeMe::sortVec2(std::vector<unsigned int> seq)
 {
 	if (std::is_sorted(seq.begin(), seq.end()))
 		return (seq);
-	std::vector<unsigned int> larger_elems;
-	std::vector<unsigned int>::iterator it_smallest = seq.begin();
+	std::vector<unsigned int> sorted;
+	std::vector<unsigned int>::iterator it_smallest_sorted = std::max_element(seq.begin(), seq.end());
+	std::vector<unsigned int>::iterator it_partner_of_smallest = std::max_element(seq.begin(), seq.end());
 	for(std::vector<unsigned int>::iterator it = seq.begin(); it != seq.end(); std::advance(it, 2))
 	{
 		if (*it < *(next(it)))
 		{
-			if (*it < *it_smallest)
-				it_smallest = it;
-			larger_elems.push_back(*(next(it)));
+			if (*it < *it_smallest_sorted)
+			{
+				it_smallest_sorted = next(it);
+				it_partner_of_smallest = it;
+			}
+			sorted.push_back(*(next(it)));
 		}
 		else
 		{
-			if (*(next(it)) < *it_smallest)
-				it_smallest = next(it);
-			larger_elems.push_back(*it);
+			if (*(next(it)) < *it_smallest_sorted)
+			{
+				it_smallest_sorted = it;
+				it_partner_of_smallest = next(it);
+			}
+			sorted.push_back(*it);
 		}
 	}
-	larger_elems = sortVec2(larger_elems);
-	larger_elems.insert(larger_elems.begin(), *it_smallest);
-	seq.erase(it_smallest);
-	return(larger_elems);
+	sorted = sortVec2(sorted);
+	sorted.insert(sorted.begin(), *it_partner_of_smallest);
+	//std::vector<unsigned int> remaining(seq.begin(), seq.end());
+	seq.erase(it_partner_of_smallest);
+	return(sorted);
 }
 
 std::list<unsigned int> PmergeMe::sortList2(std::list<unsigned int> seq)
 {
 	if (std::is_sorted(seq.begin(), seq.end()))
 		return (seq);
-	std::list<unsigned int> larger_elems;
-	std::list<unsigned int>::iterator it_smallest = seq.begin();
+	std::list<unsigned int> sorted;
+	std::list<unsigned int>::iterator it_smallest_sorted = std::max_element(seq.begin(), seq.end());
+	std::list<unsigned int>::iterator it_partner_of_smallest = std::max_element(seq.begin(), seq.end());
 	for(std::list<unsigned int>::iterator it = seq.begin(); it != seq.end(); std::advance(it, 2))
 	{
 		if (*it < *(next(it)))
 		{
-			if (*it < *it_smallest)
-				it_smallest = it;
-			larger_elems.push_back(*(next(it)));
+			if (*it < *it_smallest_sorted)
+			{
+				it_smallest_sorted = next(it);
+				it_partner_of_smallest = it;
+			}
+			sorted.push_back(*(next(it)));
 		}
 		else
 		{
-			if (*(next(it)) < *it_smallest)
-				it_smallest = next(it);
-			larger_elems.push_back(*it);
+			if (*(next(it)) < *it_smallest_sorted)
+			{
+				it_smallest_sorted = it;
+				it_partner_of_smallest = next(it);
+			}
+			sorted.push_back(*it);
 		}
 	}
-	larger_elems = sortList2(larger_elems);
-	larger_elems.insert(larger_elems.begin(), *it_smallest);
-	seq.erase(it_smallest);
+	sorted = sortList2(sorted);
+	sorted.insert(sorted.begin(), *it_partner_of_smallest);
+	seq.erase(it_partner_of_smallest);
 
-	return(larger_elems);
+	return(sorted);
 }
