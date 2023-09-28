@@ -1,5 +1,6 @@
 #include "PmergeMe.hpp"
 #include <iostream>
+#include <ctime>
 
 PmergeMe::PmergeMe()
 {
@@ -48,4 +49,20 @@ void PmergeMe::printList()
 	for(std::list<uint>::iterator it = _list.begin(); it != _list.end(); it++)
 		std::cout << *it << " ";
 	std::cout << std::endl;
+}
+
+double PmergeMe::sortVec()
+{
+	clock_t start = clock();
+
+	
+	clock_t end = clock();
+	return(static_cast<double> (end - start)/CLOCKS_PER_SEC * 1000000);
+}
+
+double PmergeMe::sortList()
+{
+	clock_t start = clock();
+	clock_t end = clock();
+	return(static_cast<double> (end - start)/CLOCKS_PER_SEC * 1000000);
 }

@@ -16,6 +16,8 @@ class PmergeMe
 		void addToList(unsigned int i);
 		void printVec();
 		void printList();
+		double sortList();
+		double sortVec();
 
 	private:
 		std::vector<unsigned int> _vec;
