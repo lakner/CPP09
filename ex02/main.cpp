@@ -4,6 +4,12 @@
 int main(int argc, char* argv[])
 {
 	PmergeMe merger;
+
+	if (argc < 2)
+	{
+		std::cout << "No arguments. Enter an sequence of positive integers to sort." << std::endl;
+		return (1);
+	}
 	try
 	{
 		for (int i = 1; i < argc; i++)
@@ -24,4 +30,5 @@ int main(int argc, char* argv[])
 	}
 
 	merger.printList();
+	merger.printVec();
 }
