@@ -2,6 +2,7 @@
 #include <iostream>
 #include <ctime>
 #include <iterator>
+#include <numeric>
 
 PmergeMe::PmergeMe()
 {
@@ -100,6 +101,7 @@ std::vector<unsigned int> PmergeMe::sortVec2(std::vector<unsigned int> seq)
 	sorted.insert(sorted.begin(), *it_partner_of_smallest);
 	//std::vector<unsigned int> remaining(seq.begin(), seq.end());
 	seq.erase(it_partner_of_smallest);
+	insertRemainingVec(seq, sorted);
 	return(sorted);
 }
 
@@ -134,6 +136,41 @@ std::list<unsigned int> PmergeMe::sortList2(std::list<unsigned int> seq)
 	sorted = sortList2(sorted);
 	sorted.insert(sorted.begin(), *it_partner_of_smallest);
 	seq.erase(it_partner_of_smallest);
+	insertRemainingList(seq, sorted);
 
 	return(sorted);
+}
+
+void	PMergeMe::insertRemainingVec(std::vector<unsigned int> seq,
+									std::vector<unsigned int> sorted)
+{
+	unsigned int size = 2;
+	unsigned int next_group = 2;
+
+	std::vector<unsigned int> group_sizes;
+
+	if (seq.size() <= 2)
+		group_sizes.push_back(seq.size());
+	else
+	{
+		group_sizes.push_back(2);
+		group_sizes.push_back(2);
+	
+		unsigned int idx = 2;
+		for (unsigned int i = 0; i < seq.size(); i < std::accumulate(0, seq.size() - 1, 0))
+		{
+			group_sizes.push_back(group_size[idx - 1] + group_size[idx - 2]);
+		}
+	}
+	for (unsigned int i = 0; i < group_sizes.size(); i++)
+	{
+		
+	}
+
+}
+
+void	PMergeMe::insertRemainingVec(std::vector<unsigned int> seq,
+									std::vector<unsigned int> sorted)
+{
+	
 }
