@@ -141,12 +141,9 @@ std::list<unsigned int> PmergeMe::sortList2(std::list<unsigned int> seq)
 	return(sorted);
 }
 
-void	PMergeMe::insertRemainingVec(std::vector<unsigned int> seq,
+void	PmergeMe::insertRemainingVec(std::vector<unsigned int> seq,
 									std::vector<unsigned int> sorted)
 {
-	unsigned int size = 2;
-	unsigned int next_group = 2;
-
 	std::vector<unsigned int> group_sizes;
 
 	if (seq.size() <= 2)
@@ -157,20 +154,64 @@ void	PMergeMe::insertRemainingVec(std::vector<unsigned int> seq,
 		group_sizes.push_back(2);
 	
 		unsigned int idx = 2;
-		for (unsigned int i = 0; i < seq.size(); i < std::accumulate(0, seq.size() - 1, 0))
+		while (seq.size() 
+			< static_cast<unsigned int> 
+			(std::accumulate(group_sizes.begin(), group_sizes.end(), 0)))
 		{
-			group_sizes.push_back(group_size[idx - 1] + group_size[idx - 2]);
+			group_sizes.push_back(group_sizes[idx - 1] + group_sizes[idx - 2]);
+			idx ++;
 		}
 	}
-	for (unsigned int i = 0; i < group_sizes.size(); i++)
+	//for (unsigned int i = 0; i < group_sizes.size(); i++)
+	for (std::vector<unsigned int>::iterator it = group_sizes.begin();
+			it != group_sizes.end();
+			std::advance(it, 1))
 	{
-		// insertion sort each group here
+		std::vector<unsigned int>::iterator it_tmp = seq.begin();
+		std::advance(it_tmp, *it);
+		std::vector<unsigned int> group(seq.begin(), it_tmp);
+		seq.erase(seq.begin(), it_tmp);
+		sorted = insert(sorted, group);
 	}
 
 }
 
-void	PMergeMe::insertRemainingVec(std::vector<unsigned int> seq,
-									std::vector<unsigned int> sorted)
+void	PmergeMe::insertRemainingList(std::list<unsigned int> seq,
+									std::list<unsigned int> sorted)
 {
+	std::list<unsigned int> group_sizes;
+
+	if (seq.size() <= 2)
+		group_sizes.push_back(seq.size());
+	else
+	{
+		group_sizes.push_back(2);
+		group_sizes.push_back(2);
 	
+		//unsigned int idx = 2;
+		std::list<unsigned int>::iterator it = seq.begin();
+		std::list<unsigned int>::iterator it_tmp0 = seq.begin();
+		std::list<unsigned int>::iterator it_tmp1 = seq.begin();
+		std::advance(it, 2);
+		std::advance(it_tmp1, 1);
+		while (seq.size() 
+			< static_cast<unsigned int> 
+			(std::accumulate(group_sizes.begin(), group_sizes.end(), 0)))
+		{
+			group_sizes.push_back(*(it_tmp1) + *(it_tmp0));
+			std::advance(it_tmp0, 1);
+			std::advance(it_tmp1, 1);
+		}
+	}
+	//for (unsigned int i = 0; i < group_sizes.size(); i++)
+	for (std::list<unsigned int>::iterator it = group_sizes.begin();
+			it != group_sizes.end();
+			std::advance(it, 1))
+	{
+		std::list<unsigned int>::iterator it_tmp = seq.begin();
+		std::advance(it_tmp, *it);
+		std::list<unsigned int> group(seq.begin(), it_tmp);
+		seq.erase(seq.begin(), it_tmp);
+		sorted = insert(sorted, group);
+	}
 }
