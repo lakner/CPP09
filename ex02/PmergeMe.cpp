@@ -76,9 +76,14 @@ std::vector<unsigned int> PmergeMe::sortVec2(std::vector<unsigned int> seq)
 	std::vector<unsigned int> sorted;
 	std::vector<unsigned int>::iterator it_smallest_sorted = std::max_element(seq.begin(), seq.end());
 	std::vector<unsigned int>::iterator it_partner_of_smallest = std::max_element(seq.begin(), seq.end());
-	for(std::vector<unsigned int>::iterator it = seq.begin(); it != seq.end(); std::advance(it, 2))
+	for(std::vector<unsigned int>::iterator it = seq.begin(); it != seq.end();)
 	{
-		if (*it < *(next(it)))
+		if (next(it) == seq.end())
+		{
+			sorted.push_back(*it);
+			seq.erase(it);
+		}
+		else if (*it < *(next(it)))
 		{
 			if (*it < *it_smallest_sorted)
 			{
@@ -86,6 +91,7 @@ std::vector<unsigned int> PmergeMe::sortVec2(std::vector<unsigned int> seq)
 				it_partner_of_smallest = it;
 			}
 			sorted.push_back(*(next(it)));
+			seq.erase(next(it));
 		}
 		else
 		{
@@ -95,7 +101,9 @@ std::vector<unsigned int> PmergeMe::sortVec2(std::vector<unsigned int> seq)
 				it_partner_of_smallest = next(it);
 			}
 			sorted.push_back(*it);
+			seq.erase(it);
 		}
+		std::advance(it, 1);
 	}
 	sorted = sortVec2(sorted);
 	sorted.insert(sorted.begin(), *it_partner_of_smallest);
@@ -110,11 +118,14 @@ std::list<unsigned int> PmergeMe::sortList2(std::list<unsigned int> seq)
 	if (std::is_sorted(seq.begin(), seq.end()))
 		return (seq);
 	std::list<unsigned int> sorted;
+	//std::list<unsigned int> remainder;
 	std::list<unsigned int>::iterator it_smallest_sorted = std::max_element(seq.begin(), seq.end());
 	std::list<unsigned int>::iterator it_partner_of_smallest = std::max_element(seq.begin(), seq.end());
-	for(std::list<unsigned int>::iterator it = seq.begin(); it != seq.end(); std::advance(it, 2))
+	for(std::list<unsigned int>::iterator it = seq.begin(); it != seq.end();)
 	{
-		if (*it < *(next(it)))
+		if (next(it) == seq.end())
+			break;
+		else if (*it < *(next(it)))
 		{
 			if (*it < *it_smallest_sorted)
 			{
@@ -122,6 +133,7 @@ std::list<unsigned int> PmergeMe::sortList2(std::list<unsigned int> seq)
 				it_partner_of_smallest = it;
 			}
 			sorted.push_back(*(next(it)));
+			seq.erase(next(it++));
 		}
 		else
 		{
@@ -131,7 +143,9 @@ std::list<unsigned int> PmergeMe::sortList2(std::list<unsigned int> seq)
 				it_partner_of_smallest = next(it);
 			}
 			sorted.push_back(*it);
+			seq.erase(it++);
 		}
+		it++;
 	}
 	sorted = sortList2(sorted);
 	sorted.insert(sorted.begin(), *it_partner_of_smallest);
@@ -142,7 +156,7 @@ std::list<unsigned int> PmergeMe::sortList2(std::list<unsigned int> seq)
 }
 
 void	PmergeMe::insertRemainingVec(std::vector<unsigned int> seq,
-									std::vector<unsigned int> sorted)
+									std::vector<unsigned int>& sorted)
 {
 	std::vector<unsigned int> group_sizes;
 
@@ -171,13 +185,13 @@ void	PmergeMe::insertRemainingVec(std::vector<unsigned int> seq,
 		std::advance(it_tmp, *it);
 		std::vector<unsigned int> group(seq.begin(), it_tmp);
 		seq.erase(seq.begin(), it_tmp);
-		sorted = insert(sorted, group);
+		sorted = insertVec(sorted, group);
 	}
 
 }
 
 void	PmergeMe::insertRemainingList(std::list<unsigned int> seq,
-									std::list<unsigned int> sorted)
+									std::list<unsigned int>& sorted)
 {
 	std::list<unsigned int> group_sizes;
 
@@ -206,12 +220,123 @@ void	PmergeMe::insertRemainingList(std::list<unsigned int> seq,
 	//for (unsigned int i = 0; i < group_sizes.size(); i++)
 	for (std::list<unsigned int>::iterator it = group_sizes.begin();
 			it != group_sizes.end();
-			std::advance(it, 1))
+			it++)
 	{
 		std::list<unsigned int>::iterator it_tmp = seq.begin();
 		std::advance(it_tmp, *it);
 		std::list<unsigned int> group(seq.begin(), it_tmp);
 		seq.erase(seq.begin(), it_tmp);
-		sorted = insert(sorted, group);
+		sorted = insertList(sorted, group);
 	}
+}
+
+std::vector<unsigned int> PmergeMe::insertVec(std::vector<unsigned int> sorted,
+								std::vector<unsigned int> group)
+{
+	// sort the group first, in descending order
+	for (std::vector<unsigned int>::iterator it = group.begin();
+			it != group.end(); 
+			std::advance(it, 1))
+	{
+		if (*it < *(next(it)))
+		{
+			unsigned int tmp = *(next(it));
+			*(next(it)) = *it;
+			*it = tmp;
+		}
+		std::vector<unsigned int>::iterator cpy = it;
+		std::vector<unsigned int>::iterator prev = cpy;
+		std::advance(prev, -1);
+		while (cpy != group.begin() && *cpy > *(prev))
+		{
+			unsigned int tmp = *(prev);
+			*(prev) = *cpy;
+			*cpy = tmp;
+			std::advance(cpy, -1);
+		}
+	}
+
+	// now insert elements of group back into the sorted part
+	for (std::vector<unsigned int>::iterator it = group.begin();
+			it != group.end(); 
+			std::advance(it, 1))
+	{
+		std::vector<unsigned int> sub_sorted(group);
+		std::vector<unsigned int>::iterator it_s, it_e, it_tmp;
+		it_s = sub_sorted.begin();
+		it_e = sub_sorted.end();
+
+		while(*it > *it_s && *it < *it_e)
+		{
+			it_tmp = it_s;
+			std::advance(it_tmp, group.size()/2);
+			if (*it < *it_tmp)
+				it_e = it_tmp;
+			else
+				it_s = it_tmp;
+		}
+		if (*it <= *it_s)
+			sorted.insert(sorted.begin(), *it);
+		else if (*it >= *it_e)
+			sorted.push_back(*it);
+	}
+	return(sorted);
+}
+
+std::list<unsigned int> PmergeMe::insertList(std::list<unsigned int> sorted,
+											std::list<unsigned int> group)
+{
+	// sort the group first, in descending order
+	for (std::list<unsigned int>::iterator it = group.begin();
+			it != group.end(); 
+			std::advance(it, 1))
+	{
+		if (*it < *(next(it)))
+		{
+			unsigned int tmp = *(next(it));
+			*(next(it)) = *it;
+			*it = tmp;
+		}
+		std::list<unsigned int>::iterator cpy = it;
+		std::list<unsigned int>::iterator prev = it;
+		std::advance(prev, -1);
+		while (cpy != group.begin() && *cpy > *(prev))
+		{
+			unsigned int tmp = *(prev);
+			*(prev) = *cpy;
+			*cpy = tmp;
+			std::advance(cpy, -1);
+		}
+	}
+
+	// now insert elements of group back into the sorted part
+	for (std::list<unsigned int>::iterator it = group.begin();
+			it != group.end(); 
+			std::advance(it, 1))
+	{
+		//std::list<unsigned int> sub_sorted(sorted);
+		std::list<unsigned int>::iterator it_s, it_e, it_tmp;
+		it_s = sorted.begin();
+		it_s++;
+		it_e = sorted.end();
+		it_e --;
+	  int size = sorted.size();
+		// TODO: Not sure what the fuck I'm trying to do here, it does not work.
+		while(*it > *it_s && *it < *it_e && size > 0)
+		{
+			it_tmp = it_s;
+			size /= 2;
+			std::advance(it_tmp, size/2);
+
+			if (*it < *it_tmp)
+				it_e = it_tmp;
+			else
+				it_s = it_tmp;
+		}
+		if (*it <= *it_s)
+			sorted.insert(it_s, *it);
+		else
+			sorted.insert(it_e, *it);
+	}
+	return(sorted);
 }
