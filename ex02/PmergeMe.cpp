@@ -114,31 +114,31 @@ double PmergeMe::sortList()
 
 std::vector<unsigned int> PmergeMe::sortVec2(std::vector<unsigned int> seq)
 {
-	if (std::is_sorted(seq.begin(), seq.end()))
+	if (std::is_sorted(seq.begin(), seq.end()) || seq.size() <= 1)
 		return (seq);
 	std::vector<unsigned int> sorted;
-	unsigned int smallest_sorted = *(std::max_element(seq.begin(), seq.end()));
-	unsigned int partner_of_smallest = *(std::max_element(seq.begin(), seq.end()));
+	int partner_of_smallest;
+
 	for (unsigned int i = 0; i < seq.size() - 1; i++)
 	{
 		if (seq[i] < seq[i + 1])
 		{
-			if (seq[i + 1] < smallest_sorted)
+			sorted.push_back(seq[i + 1]);
+			if (seq[i + 1] == *(std::min_element(sorted.begin(), sorted.end())))
 			{
-				smallest_sorted = seq[i + 1];
+				//smallest_sorted = seq[i + 1];
 				partner_of_smallest = seq[i];
 			}
-			sorted.push_back(seq[i + 1]);
 			seq.erase(seq.begin() + i + 1);
 		}
 		else // if seq[i + 1] <= seq[i]
 		{
-			if (seq[i] < smallest_sorted)
+			sorted.push_back(seq[i]);
+			if (seq[i] == *(std::min_element(sorted.begin(), sorted.end())))
 			{
-				smallest_sorted = seq[i];
+				//smallest_sorted = seq[i];
 				partner_of_smallest = seq[i + 1];
 			}
-			sorted.push_back(seq[i]);
 			seq.erase(seq.begin() + i);
 		}
 	}
@@ -338,15 +338,13 @@ std::vector<unsigned int> PmergeMe::insertVec(std::vector<unsigned int> sorted,
 	{
 		std::vector<unsigned int>::iterator it_s, it_e, it_tmp;
 		it_s = sorted.begin();
-		it_s++;
-		it_e = sorted.end();
-		it_e --;
-	  int size = sorted.size();
+		it_e = prev(sorted.end());
+		int size = sorted.size();
 		while(*it > *it_s && *it < *it_e && size > 0)
 		{
 			it_tmp = it_s;
 			size /= 2;
-			std::advance(it_tmp, size/2);
+			std::advance(it_tmp, size);
 
 			if (*it < *it_tmp)
 				it_e = it_tmp;
@@ -357,6 +355,11 @@ std::vector<unsigned int> PmergeMe::insertVec(std::vector<unsigned int> sorted,
 		{
 			it_s --;
 			sorted.insert(it_s, *it);
+		}
+		else if (*it <= *it_e)
+		{
+			it_e --;
+			sorted.insert(it_e, *it);
 		}
 		else
 			sorted.insert(it_e, *it);
