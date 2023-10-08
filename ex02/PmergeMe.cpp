@@ -455,15 +455,13 @@ std::list<unsigned int> PmergeMe::insertList(std::list<unsigned int> sorted,
 		//std::list<unsigned int> sub_sorted(sorted);
 		std::list<unsigned int>::iterator it_s, it_e, it_tmp;
 		it_s = sorted.begin();
-		it_s++;
-		it_e = sorted.end();
-		it_e --;
-	  int size = sorted.size();
+		it_e = prev(sorted.end());
+		int size = sorted.size();
 		while(*it > *it_s && *it < *it_e && size > 0)
 		{
 			it_tmp = it_s;
 			size /= 2;
-			std::advance(it_tmp, size/2);
+			std::advance(it_tmp, size);
 
 			if (*it < *it_tmp)
 				it_e = it_tmp;
@@ -474,6 +472,11 @@ std::list<unsigned int> PmergeMe::insertList(std::list<unsigned int> sorted,
 		{
 			it_s --;
 			sorted.insert(it_s, *it);
+		}
+		else if (*it <= *it_e)
+		{
+			it_e --;
+			sorted.insert(it_e, *it);
 		}
 		else
 			sorted.insert(it_e, *it);
