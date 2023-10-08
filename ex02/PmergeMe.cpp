@@ -107,7 +107,6 @@ std::vector<unsigned int> PmergeMe::sortVec2(std::vector<unsigned int> seq)
 	}
 	sorted = sortVec2(sorted);
 	sorted.insert(sorted.begin(), *it_partner_of_smallest);
-	//std::vector<unsigned int> remaining(seq.begin(), seq.end());
 	seq.erase(it_partner_of_smallest);
 	insertRemainingVec(seq, sorted);
 	return(sorted);
@@ -147,9 +146,9 @@ std::list<unsigned int> PmergeMe::sortList2(std::list<unsigned int> seq)
 		}
 		it++;
 	}
-	sorted = sortList2(sorted);
 	sorted.insert(sorted.begin(), *it_partner_of_smallest);
 	seq.erase(it_partner_of_smallest);
+	sorted = sortList2(sorted);
 	insertRemainingList(seq, sorted);
 
 	return(sorted);
@@ -334,7 +333,10 @@ std::list<unsigned int> PmergeMe::insertList(std::list<unsigned int> sorted,
 				it_s = it_tmp;
 		}
 		if (*it <= *it_s)
+		{
+			it_s --;
 			sorted.insert(it_s, *it);
+		}
 		else
 			sorted.insert(it_e, *it);
 	}
