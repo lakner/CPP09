@@ -6,7 +6,7 @@ ODIR	= obj
 OBJS	= $(addprefix $(ODIR)/, $(SRCS:.cpp=.o))
 
 CC		= c++
-CFLAGS	= -Wall -Wextra -Werror -std=c++98 -g -O0
+CFLAGS	= -Wall -Wextra -Werror -std=c++98 #-g -O0
 SANFLAGS = -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-sanitize=null -fno-sanitize=alignment
 
 print-%: 
