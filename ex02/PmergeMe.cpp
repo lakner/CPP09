@@ -70,49 +70,6 @@ double PmergeMe::sortList()
 	return(static_cast<double> (end - start)/CLOCKS_PER_SEC * 1000000);
 }
 
-// std::vector<unsigned int> PmergeMe::sortVec2(std::vector<unsigned int> seq)
-// {
-// 	if (std::is_sorted(seq.begin(), seq.end()))
-// 		return (seq);
-// 	std::vector<unsigned int> sorted;
-// 	std::vector<unsigned int>::iterator it_smallest_sorted = std::max_element(seq.begin(), seq.end());
-// 	std::vector<unsigned int>::iterator it_partner_of_smallest = std::max_element(seq.begin(), seq.end());
-// 	for(std::vector<unsigned int>::iterator it = seq.begin(); it != seq.end();)
-// 	{
-// 		if (next(it) == seq.end())
-// 		{
-// 			sorted.push_back(*it);
-// 			seq.erase(it);
-// 		}
-// 		else if (*it < *(next(it)))
-// 		{
-// 			if (*it < *it_smallest_sorted)
-// 			{
-// 				it_smallest_sorted = next(it);
-// 				it_partner_of_smallest = it;
-// 			}
-// 			sorted.push_back(*(next(it)));
-// 			seq.erase(next(it));
-// 		}
-// 		else
-// 		{
-// 			if (*(next(it)) < *it_smallest_sorted)
-// 			{
-// 				it_smallest_sorted = it;
-// 				it_partner_of_smallest = next(it);
-// 			}
-// 			sorted.push_back(*it);
-// 			seq.erase(it);
-// 		}
-// 		std::advance(it, 1);
-// 	}
-// 	sorted = sortVec2(sorted);
-// 	sorted.insert(sorted.begin(), *it_partner_of_smallest);
-// 	seq.erase(it_partner_of_smallest);
-// 	insertRemainingVec(seq, sorted);
-// 	return(sorted);
-// }
-
 std::vector<unsigned int> PmergeMe::sortVec2(std::vector<unsigned int> seq)
 {
 	if (std::is_sorted(seq.begin(), seq.end()) || seq.size() <= 1)
@@ -126,20 +83,14 @@ std::vector<unsigned int> PmergeMe::sortVec2(std::vector<unsigned int> seq)
 		{
 			sorted.push_back(seq[i + 1]);
 			if (seq[i + 1] == *(std::min_element(sorted.begin(), sorted.end())))
-			{
-				//smallest_sorted = seq[i + 1];
 				partner_of_smallest = seq[i];
-			}
 			seq.erase(seq.begin() + i + 1);
 		}
 		else // if seq[i + 1] <= seq[i]
 		{
 			sorted.push_back(seq[i]);
 			if (seq[i] == *(std::min_element(sorted.begin(), sorted.end())))
-			{
-				//smallest_sorted = seq[i];
 				partner_of_smallest = seq[i + 1];
-			}
 			seq.erase(seq.begin() + i);
 		}
 	}
@@ -156,8 +107,8 @@ std::list<unsigned int> PmergeMe::sortList2(std::list<unsigned int> seq)
 	if (std::is_sorted(seq.begin(), seq.end()))
 		return (seq);
 	std::list<unsigned int> sorted;
-	std::list<unsigned int>::iterator it_smallest_sorted = std::max_element(seq.begin(), seq.end());
-	std::list<unsigned int>::iterator it_partner_of_smallest = std::max_element(seq.begin(), seq.end());
+	int partner_of_smallest;
+
 	for(std::list<unsigned int>::iterator it = seq.begin(); it != seq.end();)
 	{
 		if (next(it) == seq.end())
