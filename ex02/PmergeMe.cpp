@@ -347,8 +347,8 @@ std::vector<unsigned int> PmergeMe::insertVec(std::vector<unsigned int> sorted,
 	for (int i = group.size() - 1; i >= 0; i --)
 	{
 		//std::vector<unsigned int> search_area(sorted.begin(), sorted.begin() + i - 1);
-		unsigned int start_idx = 0; 
-		unsigned int end_idx = sorted.size() - 1;
+		int start_idx = 0; 
+		int end_idx = sorted.size() - 1;
 
 		if (group[i] < sorted[start_idx])
 			sorted.insert(sorted.begin(), group[i]);
@@ -358,9 +358,11 @@ std::vector<unsigned int> PmergeMe::insertVec(std::vector<unsigned int> sorted,
 			sorted.insert(sorted.begin() + end_idx, group[i]);
 		else
 		{
-			while (end_idx - start_idx > 2)
+			while (end_idx - start_idx > 1)
 			{
-				unsigned int mid = (end_idx - start_idx) / 2;
+				int mid = (end_idx - start_idx) / 2 + start_idx;
+				// if (mid == start_idx)
+				// 	mid++;
 				if (group[i] <= sorted[mid])
 					end_idx = mid;
 				else // group[i] > sorted[mid]
