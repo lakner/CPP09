@@ -3,6 +3,7 @@
 #include <ctime>
 #include <iterator>
 #include <numeric>
+#include <cmath>
 
 PmergeMe::PmergeMe()
 {
@@ -201,31 +202,27 @@ void	PmergeMe::insertRemainingVec(std::vector<unsigned int> seq,
 	else
 	{
 		group_sizes.push_back(2);
-		group_sizes.push_back(2);
-	
-		//unsigned int idx = 2;
-		std::vector<unsigned int>::iterator it = seq.begin();
-		std::vector<unsigned int>::iterator it_tmp0 = seq.begin();
-		std::vector<unsigned int>::iterator it_tmp1 = seq.begin();
-		std::advance(it, 2);
-		std::advance(it_tmp1, 1);
+		int i = 2;
 		while (seq.size() 
-			< static_cast<unsigned int> 
+			> static_cast<unsigned int> 
 			(std::accumulate(group_sizes.begin(), group_sizes.end(), 0)))
 		{
-			group_sizes.push_back(*(it_tmp1) + *(it_tmp0));
-			std::advance(it_tmp0, 1);
-			std::advance(it_tmp1, 1);
+			int tmp = group_sizes.back();
+			group_sizes.push_back((1 << i) - tmp);
+			i++;
 		}
 	}
 	for (std::vector<unsigned int>::iterator it = group_sizes.begin();
 			it != group_sizes.end();
 			it++)
 	{
-		std::vector<unsigned int>::iterator it_tmp = seq.begin();
-		std::advance(it_tmp, *it);
-		std::vector<unsigned int> group(seq.begin(), it_tmp);
-		seq.erase(seq.begin(), it_tmp);
+		// std::vector<unsigned int>::iterator it_tmp = seq.begin();
+		// std::advance(it_tmp, *it);
+		std::vector<unsigned int> group(seq.begin(), seq.begin() + *it);
+		if (seq.begin() + *it <= seq.end())
+			seq.erase(seq.begin(), seq.begin()+ *it);
+		else
+			seq.erase(seq.begin(), seq.end());
 		sorted = insertVec(sorted, group);
 	}
 }
