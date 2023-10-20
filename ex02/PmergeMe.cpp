@@ -216,13 +216,14 @@ void	PmergeMe::insertRemainingVec(std::vector<unsigned int> seq,
 			it != group_sizes.end();
 			it++)
 	{
-		// std::vector<unsigned int>::iterator it_tmp = seq.begin();
-		// std::advance(it_tmp, *it);
-		std::vector<unsigned int> group(seq.begin(), seq.begin() + *it);
+		std::vector<unsigned int>::iterator it_end;
+
 		if (seq.begin() + *it <= seq.end())
-			seq.erase(seq.begin(), seq.begin()+ *it);
+			it_end = seq.begin() + *it;
 		else
-			seq.erase(seq.begin(), seq.end());
+			it_end = seq.end();
+		std::vector<unsigned int> group(seq.begin(), it_end);
+		seq.erase(seq.begin(), it_end);
 		sorted = insertVec(sorted, group);
 	}
 }
