@@ -30,7 +30,11 @@ public:
 	};
 	class BadDateException : public std::exception
 	{
-		const char* what() const throw();
+		public:
+			BadDateException(const char* err);
+			const char* what() const throw();
+		private:
+			const char* err;
 	};
 	
 private:

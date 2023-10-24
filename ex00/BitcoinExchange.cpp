@@ -29,22 +29,26 @@ BitcoinExchange::~BitcoinExchange()
 
 const char* BitcoinExchange::NoFileException::what() const throw()
 {
-	return("Couldn't open input file.");
+	return("could not open file.");
 }
 
 const char* BitcoinExchange::RateTooLargeException::what() const throw()
 {
-	return("Rate greater than 1000.");
+	return("too large a number.");
 }
 
 const char* BitcoinExchange::RateTooSmallException::what() const throw()
 {
-	return("Rate not a positive number.");
+	return("not a positive number.");
 }
 
+BitcoinExchange::BadDateException::BadDateException(const char* err) : err(err)
+{
+
+}
 const char* BitcoinExchange::BadDateException::what() const throw()
 {
-	return("Invalid date.");
+	return err;
 }
 
 std::map< std::string, float > 
@@ -82,7 +86,7 @@ std::pair<std::string, float> BitcoinExchange::processLine(std::string line, boo
 	std::getline(ss, s_rate);
 
 	if (!dateIsValid(date))
-		throw BadDateException();
+		throw BadDateException(("bad input => " + date).c_str());
 	rate = stof(s_rate);
 	if (rate < 0)
 		throw RateTooSmallException();

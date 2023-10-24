@@ -19,7 +19,6 @@ class PmergeMe
 		void printList();
 		double sortList();
 		double sortVec();
-		//void insertRemainingVec(std::vector<unsigned int>remaining, std::vector<unsigned int> sorted);
 
 	private:
 		std::list<unsigned int> sortList2(std::list<unsigned int>);
