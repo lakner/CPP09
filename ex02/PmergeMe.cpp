@@ -131,7 +131,8 @@ std::list<unsigned int> PmergeMe::sortList2(std::list<unsigned int> seq)
 	sorted.insert(sorted.begin(), partner_of_smallest);
 	seq.erase(std::find(seq.begin(), seq.end(), partner_of_smallest));
 	sorted = sortList2(sorted);
-	insertRemainingList(seq, sorted);
+	if (seq.size())
+		insertRemainingList(seq, sorted);
 
 	return(sorted);
 }
@@ -177,6 +178,8 @@ void	PmergeMe::insertRemainingList(std::list<unsigned int> seq,
 {
 	std::list<unsigned int> group_sizes;
 
+	if (!seq.size())
+		return;
 	if (seq.size() <= 2)
 		group_sizes.push_back(seq.size());
 	else
@@ -244,9 +247,6 @@ std::vector<unsigned int> PmergeMe::insertVec(std::vector<unsigned int> sorted,
 std::list<unsigned int> PmergeMe::insertList(std::list<unsigned int> sorted,
 											std::list<unsigned int> group)
 {
-	// int group_size = group.size();
-	// if (!group_size)
-	// 	return(sorted);
 	std::list<unsigned int>::iterator group_it = group.end();
 	do
 	{
@@ -278,7 +278,6 @@ std::list<unsigned int> PmergeMe::insertList(std::list<unsigned int> sorted,
 			}
 			sorted.insert(++sort_begin, *group_it);
 		}
-		//group_size --;
 	} while (group_it != group.begin());
 	return(sorted);
 }
