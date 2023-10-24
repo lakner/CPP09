@@ -160,7 +160,7 @@ void BitcoinExchange::printResults(std::string filename)
 				(values.first > btcp_it->first && values.first < std::next(btcp_it)->first ))
 			{
 				std::cout << values.first << " => " 
-						<< btcp_it->second << " = " 
+						<< values.second << " = " 
 						<< (btcp_it->second) * values.second << std::endl;
 				
 				break;
