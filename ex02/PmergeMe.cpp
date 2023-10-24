@@ -244,9 +244,9 @@ std::vector<unsigned int> PmergeMe::insertVec(std::vector<unsigned int> sorted,
 std::list<unsigned int> PmergeMe::insertList(std::list<unsigned int> sorted,
 											std::list<unsigned int> group)
 {
-	int group_size = group.size();
-	if (!group_size)
-		return(sorted);
+	// int group_size = group.size();
+	// if (!group_size)
+	// 	return(sorted);
 	std::list<unsigned int>::iterator group_it = group.end();
 	do
 	{
@@ -278,8 +278,7 @@ std::list<unsigned int> PmergeMe::insertList(std::list<unsigned int> sorted,
 			}
 			sorted.insert(++sort_begin, *group_it);
 		}
-		//group_it --;
-		group_size --;
-	} while (group_size);
+		//group_size --;
+	} while (group_it != group.begin());
 	return(sorted);
 }
