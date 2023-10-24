@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 	std::cout << "Before: ";
 	merger.printList();
 	merger.printVec();
-	//timeList += merger.sortList();
+	timeList += merger.sortList();
 	timeVec += merger.sortVec();
 	std::cout << "List after: " << std::endl;
 	merger.printList();
