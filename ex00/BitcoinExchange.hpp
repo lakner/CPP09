@@ -38,11 +38,11 @@ public:
 	};
 	
 private:
-	std::map< std::string, float > _btcPrices;
-	std::map< std::string, float > _btcValues;
-	std::pair< std::string, float > processLine(std::string line, bool tooLarge);
+	std::map< std::string, double > _btcPrices;
+	std::map< std::string, double > _btcValues;
+	std::pair< std::string, double > processLine(std::string line, bool tooLarge);
 	bool dateIsValid(std::string sdate);
-	std::map< std::string, float > readInputfile(std::string filename);
+	std::map< std::string, double > readInputfile(std::string filename);
 };
 
 #endif

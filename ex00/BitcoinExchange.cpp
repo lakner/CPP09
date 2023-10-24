@@ -51,10 +51,10 @@ const char* BitcoinExchange::BadDateException::what() const throw()
 	return err;
 }
 
-std::map< std::string, float > 
+std::map< std::string, double > 
 BitcoinExchange::readInputfile(std::string filename)
 {
-	std::map< std::string, float > contents;
+	std::map< std::string, double > contents;
 	std::ifstream infile(filename);
 	std::string line;
 
@@ -71,12 +71,12 @@ BitcoinExchange::readInputfile(std::string filename)
 	return(contents);
 }
 
-std::pair<std::string, float> BitcoinExchange::processLine(std::string line, bool tooLarge)
+std::pair<std::string, double> BitcoinExchange::processLine(std::string line, bool tooLarge)
 {
-	std::pair<std::string, float> pair;
+	std::pair<std::string, double> pair;
 	std::string date;
 	std::string s_rate;
-	float rate;
+	double rate;
 
 	std::istringstream ss(line);
 	if (line.find('|') != std::string::npos)
@@ -92,6 +92,7 @@ std::pair<std::string, float> BitcoinExchange::processLine(std::string line, boo
 		throw RateTooSmallException();
 	else if (rate > 1000 && tooLarge)
 		throw RateTooLargeException();
+	date.erase(std::remove(date.begin(), date.end(), ' '), date.end());
 	pair = std::make_pair(date, rate);
 	return (pair);
 }
@@ -108,7 +109,6 @@ bool BitcoinExchange::dateIsValid(std::string sdate)
 	int month = stoi(sdate.substr(5, 2));
 	int day = stoi(sdate.substr(8, 2));
 
-	//std::cout << year << " " << month << " " << day << std::endl;
 	if (year < 0 || day < 1 || month < 1 || month > 12 || day > 31)
 		return (false);
 	if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30)
@@ -127,11 +127,14 @@ bool BitcoinExchange::dateIsValid(std::string sdate)
 void BitcoinExchange::readInputData(std::string fPrices)
 {
 	_btcPrices = readInputfile(fPrices);
+	// for (std::map<std::string, double>::iterator it = _btcPrices.begin(); it != _btcPrices.end(); ++it) {
+    //     std::cout << "Key: " << it->first << ", Value: " << it->second << std::endl;
+    // }
 }
 
 void BitcoinExchange::printResults(std::string filename)
 {
-	std::map< std::string, float > contents;
+	std::map< std::string, double > contents;
 	std::ifstream infile(filename);
 	std::string line;
 
@@ -140,37 +143,65 @@ void BitcoinExchange::printResults(std::string filename)
 	
 	// discard the first line
 	std::getline(infile, line);
-	std::pair<std::string, float> values;
+	std::pair<std::string, double> values;
 	// read the rest
 	while (std::getline(infile, line))
 	{
 		try
 		{
 			values = processLine(line, true);
+			//std::cout << values.first << " " << values.second << std::endl;
 		}
 		catch (std::exception &ex)
 		{
 			std::cout << "Error: " << ex.what() << std::endl;
 			continue;
 		}
-		for (std::map< std::string, float >::iterator it2 = _btcPrices.begin();
-			it2 != _btcPrices.end(); it2++)
-		if (values.first == it2->first || 
-			(values.first > it2->first && it2 == _btcPrices.begin() ))
+		// if (_btcPrices.find(values.first) != _btcPrices.end())
+		// {
+		// 	std::cout << values.first << " => " 
+		// 				<< _btcPrices[values.first] << " = " 
+		// 				<< _btcPrices[values.first] * values.second << std::endl;
+		// }
+		// else
 		{
-			std::cout << values.first << " => " 
-					<< it2->second << " = " 
-					<< it2->second * values.second << std::endl;
+			// 	for (std::map< std::string, double >::iterator it2 = _btcPrices.begin();
+			// 	it2 != _btcPrices.end(); it2++)
+			// 	{
+			// 		std::cout << it2->first << " " << values.first << "'" << std::endl;
+			// 	}
+			// }
 			
-			break;
-		}
-		else if (values.first > it2->first)
-		{
-			it2 --;
-			std::cout << values.first << " => " 
-				<< it2->second << " " 
-				<< values.second * it2->second << std::endl;
-			break;
+			for (std::map< std::string, double >::iterator btcp_it = _btcPrices.begin();
+				btcp_it != _btcPrices.end(); btcp_it++)
+			{
+				// std::cout << "Bitcoin value: " << btcp_it->first << " " << btcp_it->second << std::endl;
+				// 	std::cout << "data value: " << values.first << " " << values.second << std::endl;
+				//if 
+				//std::cout << it2->second << std::endl;
+				if (values.first == btcp_it->first || 
+					(values.first > btcp_it->first && values.first < std::next(btcp_it)->first ))
+				{
+					// std::cout << "Bitcoin value: " << btcp_it->first << " " << btcp_it->second << std::endl;
+					// std::cout << "data value: " << values.first << " " << values.second << std::endl;
+					std::cout << values.first << " => " 
+							<< btcp_it->second << " = " 
+							<< (btcp_it->second) * values.second << std::endl;
+					
+					break;
+				}
+				// else if (values.first > btcp_it->first)
+				// {
+				// 	std::cout << btcp_it->first << " " << btcp_it->second << std::endl;
+				// 	btcp_it --;
+					
+				// 	std::cout << values.first << " " << values.second << std::endl;
+				// 	std::cout << values.first << " => " 
+				// 		<< btcp_it->second << " " 
+				// 		<< values.second * btcp_it->second << std::endl;
+				// 	break;
+				// }
+			}
 		}
 	}
 }
