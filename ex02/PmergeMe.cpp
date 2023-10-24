@@ -258,10 +258,10 @@ std::list<unsigned int> PmergeMe::insertList(std::list<unsigned int> sorted,
 			std::advance(sort_end, - 1);
 		//// Or maybe use reverse iterator!
 
-		if (*group_it < *(sorted.begin()))
+		if (*group_it < sorted.front())
 			sorted.push_front(*group_it);
 		else if (*group_it > (sorted.back()))
-			sorted.insert(sorted.end(), *sort_end);
+			sorted.push_back(*group_it);
 		else if (sorted.size() == 2)
 			sorted.insert(next(sorted.begin()), *group_it);
 		else
