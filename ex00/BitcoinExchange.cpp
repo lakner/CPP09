@@ -127,9 +127,6 @@ bool BitcoinExchange::dateIsValid(std::string sdate)
 void BitcoinExchange::readInputData(std::string fPrices)
 {
 	_btcPrices = readInputfile(fPrices);
-	// for (std::map<std::string, double>::iterator it = _btcPrices.begin(); it != _btcPrices.end(); ++it) {
-    //     std::cout << "Key: " << it->first << ", Value: " << it->second << std::endl;
-    // }
 }
 
 void BitcoinExchange::printResults(std::string filename)
@@ -150,57 +147,23 @@ void BitcoinExchange::printResults(std::string filename)
 		try
 		{
 			values = processLine(line, true);
-			//std::cout << values.first << " " << values.second << std::endl;
 		}
 		catch (std::exception &ex)
 		{
 			std::cout << "Error: " << ex.what() << std::endl;
 			continue;
 		}
-		// if (_btcPrices.find(values.first) != _btcPrices.end())
-		// {
-		// 	std::cout << values.first << " => " 
-		// 				<< _btcPrices[values.first] << " = " 
-		// 				<< _btcPrices[values.first] * values.second << std::endl;
-		// }
-		// else
+		for (std::map< std::string, double >::iterator btcp_it = _btcPrices.begin();
+			btcp_it != _btcPrices.end(); btcp_it++)
 		{
-			// 	for (std::map< std::string, double >::iterator it2 = _btcPrices.begin();
-			// 	it2 != _btcPrices.end(); it2++)
-			// 	{
-			// 		std::cout << it2->first << " " << values.first << "'" << std::endl;
-			// 	}
-			// }
-			
-			for (std::map< std::string, double >::iterator btcp_it = _btcPrices.begin();
-				btcp_it != _btcPrices.end(); btcp_it++)
+			if (values.first == btcp_it->first || 
+				(values.first > btcp_it->first && values.first < std::next(btcp_it)->first ))
 			{
-				// std::cout << "Bitcoin value: " << btcp_it->first << " " << btcp_it->second << std::endl;
-				// 	std::cout << "data value: " << values.first << " " << values.second << std::endl;
-				//if 
-				//std::cout << it2->second << std::endl;
-				if (values.first == btcp_it->first || 
-					(values.first > btcp_it->first && values.first < std::next(btcp_it)->first ))
-				{
-					// std::cout << "Bitcoin value: " << btcp_it->first << " " << btcp_it->second << std::endl;
-					// std::cout << "data value: " << values.first << " " << values.second << std::endl;
-					std::cout << values.first << " => " 
-							<< btcp_it->second << " = " 
-							<< (btcp_it->second) * values.second << std::endl;
-					
-					break;
-				}
-				// else if (values.first > btcp_it->first)
-				// {
-				// 	std::cout << btcp_it->first << " " << btcp_it->second << std::endl;
-				// 	btcp_it --;
-					
-				// 	std::cout << values.first << " " << values.second << std::endl;
-				// 	std::cout << values.first << " => " 
-				// 		<< btcp_it->second << " " 
-				// 		<< values.second * btcp_it->second << std::endl;
-				// 	break;
-				// }
+				std::cout << values.first << " => " 
+						<< btcp_it->second << " = " 
+						<< (btcp_it->second) * values.second << std::endl;
+				
+				break;
 			}
 		}
 	}
