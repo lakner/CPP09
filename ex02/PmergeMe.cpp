@@ -248,13 +248,12 @@ std::list<unsigned int> PmergeMe::insertList(std::list<unsigned int> sorted,
 	if (!group_size)
 		return(sorted);
 	std::list<unsigned int>::iterator group_it = group.end();
-	//group_it --;
 	do
 	{
 		group_it --;
 		std::list<unsigned int>::iterator sort_begin = sorted.begin();
 		std::list<unsigned int>::iterator sort_end = sorted.end();
-		/////Try this line tomorrow
+
 		if (sort_end != group.begin())
 			std::advance(sort_end, - 1);
 		//// Or maybe use reverse iterator!
