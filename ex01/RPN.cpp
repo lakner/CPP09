@@ -9,6 +9,8 @@ double eval(std::string expr)
 		double result;
 		double op1 = 0;
 		double op2 = 0;
+		if (expr.size() == 1)
+			return(stof(expr));
 		for (std::string::iterator it = (expr.begin()); it != expr.end(); it++)
 		{
 			if (isdigit(*it))
