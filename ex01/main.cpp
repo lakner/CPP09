@@ -27,6 +27,8 @@ int main(int argc, char **argv)
 			std::string operands = "+-*/";
 			if (operands.find(*it) == std::string::npos)
 				return(throwTheError());
+			if (!rpnstack.size())
+				return(throwTheError());
 			switch (*it)
 			{
 				result = rpnstack.back();
@@ -48,7 +50,7 @@ int main(int argc, char **argv)
 					return 1;
 			}
 			rpnstack.pop_back();
-			rpnstack.push_front(result);
+			rpnstack.push_back(result);
 		}
 	}
 	std::cout << result << std::endl;
