@@ -137,7 +137,7 @@ std::list<unsigned int> PmergeMe::sortList2(std::list<unsigned int> seq)
 	return(sorted);
 }
 
-void	PmergeMe::insertRemainingVec(std::vector<unsigned int> seq,
+void	PmergeMe::insertRemainingVec(std::vector<unsigned int>& seq,
 									std::vector<unsigned int>& sorted)
 {
 	std::vector<unsigned int> group_sizes;
@@ -173,7 +173,7 @@ void	PmergeMe::insertRemainingVec(std::vector<unsigned int> seq,
 	}
 }
 
-void	PmergeMe::insertRemainingList(std::list<unsigned int> seq,
+void	PmergeMe::insertRemainingList(std::list<unsigned int>& seq,
 									std::list<unsigned int>& sorted)
 {
 	std::list<unsigned int> group_sizes;
@@ -213,8 +213,8 @@ void	PmergeMe::insertRemainingList(std::list<unsigned int> seq,
 }
 
 
-std::vector<unsigned int> PmergeMe::insertVec(std::vector<unsigned int> sorted,
-											std::vector<unsigned int> group)
+std::vector<unsigned int> PmergeMe::insertVec(std::vector<unsigned int>& sorted,
+											std::vector<unsigned int>& group)
 {
 	for (int i = group.size() - 1; i >= 0; i --)
 	{
@@ -244,8 +244,8 @@ std::vector<unsigned int> PmergeMe::insertVec(std::vector<unsigned int> sorted,
 }
 
 
-std::list<unsigned int> PmergeMe::insertList(std::list<unsigned int> sorted,
-											std::list<unsigned int> group)
+std::list<unsigned int> PmergeMe::insertList(std::list<unsigned int>& sorted,
+											std::list<unsigned int>& group)
 {
 	std::list<unsigned int>::iterator group_it = group.end();
 	do
