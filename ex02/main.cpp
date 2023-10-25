@@ -58,8 +58,8 @@ int main(int argc, char* argv[])
 		timeVec += merger.sortVec();
 		std::cout << "After: ";
 		merger.printVec();
-		std::cout << "List after: ";
-		merger.printList();
+		// std::cout << "List after: ";
+		// merger.printList();
 		std::cout << "Time to process a range of " << argc - 1 << " elements with std::list: " << timeList << " us" << std::endl;
 		std::cout << "Time to process a range of " << argc - 1 << " elements with std::vec: " << timeVec << " us" << std::endl;
 	}
