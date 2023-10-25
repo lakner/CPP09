@@ -2,17 +2,11 @@
 #include <iostream>
 #include <stack>
 
-int throwTheError()
-{
-	std::cout << "Error" << std::endl;
-	return(1);
-}
-
 
 double eval(std::string expr)
 {
 		std::stack<double> rpnstack;
-		double result;// = (s_expr[0] - '0');
+		double result;
 		double op1 = 0;
 		double op2 = 0;
 		for (std::string::iterator it = (expr.begin()); it != expr.end(); it++)
@@ -22,12 +16,8 @@ double eval(std::string expr)
 			else
 			{
 				std::string operands = "+-*/";
-				if (operands.find(*it) == std::string::npos)
-					return(throwTheError());
-				if (!rpnstack.size())
-					return(throwTheError());
-				// result = rpnstack.front();
-				// rpnstack.pop_front();
+				if (operands.find(*it) == std::string::npos || rpnstack.size() < 2)
+					throw "Error";
 				op1 = rpnstack.top();
 				rpnstack.pop();
 				op2 = rpnstack.top();
@@ -47,11 +37,12 @@ double eval(std::string expr)
 						result = op2 / op1;
 						break;
 					default:
-						std::cout << "Error" << std::endl;
-						return 1;
+						throw "Error";
 				}
 				rpnstack.push(result);
 			}
 		}
+	if (rpnstack.size() != 1)
+		throw "Error";
 	return result;
 }
